@@ -5,7 +5,7 @@
   "types": "dist/index.d.ts",
   "repository": "https://github.com/keslerm/salt-net-api",
   "prepublish": "tsc",
-  "postinstall": "tsc --outDir ./build",
+  "postinstall": "tsc --outDir ./dist",
   "author": "Morgan Kesler",
   "license": "MIT",
   "scripts": {
