@@ -4,14 +4,14 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "repository": "https://github.com/keslerm/salt-net-api",
-  "prepublish": "tsc",
-  "postinstall": "tsc --outDir ./dist",
   "author": "Morgan Kesler",
   "license": "MIT",
   "scripts": {
     "build": "tsc",
     "test": "jest --coverage --verbose",
-    "clean": "rm -rf dist/"
+    "clean": "rm -rf dist/",
+    "prepublish": "tsc",
+    "postinstall": "tsc --outDir ./dist"
   },
   "devDependencies": {
     "@types/node": "^16.9.1",
