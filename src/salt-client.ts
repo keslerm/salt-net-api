@@ -26,11 +26,11 @@ export class SaltClient {
       },
     });
 
-    response.data;
+    return response.data;
   }
 
   protected async refreshToken() {
-    if (!this.expires || this.expires <= new Date().getTime()) {
+    if (!this.expires || this.expires <= new Date().getTime() / 1000) {
       console.log("refreshing token");
 
       const results = await this.client.post("/login", {
@@ -43,7 +43,7 @@ export class SaltClient {
         console.log("login success");
 
         this.token = results.data.return[0].token;
-        this.expires = results.data.return[0].expires;
+        this.expires = results.data.return[0].expire;
       } else {
         throw new Error("Failed to login to SaltStack api");
       }
