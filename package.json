@@ -1,6 +1,6 @@
 {
   "name": "salt-net-api",
-  "version": "0.1.1",
+  "version": "0.1.4",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "repository": "https://github.com/keslerm/salt-net-api",
@@ -10,8 +10,7 @@
     "build": "tsc",
     "test": "jest --coverage --verbose",
     "clean": "rm -rf dist/",
-    "prepublish": "tsc",
-    "postinstall": "tsc --outDir ./dist"
+    "prepublish": "tsc"
   },
   "devDependencies": {
     "@types/node": "^16.9.1",

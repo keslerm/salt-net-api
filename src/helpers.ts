@@ -29,8 +29,9 @@ export class StateResponseHelper {
   public successes(): number {
     let count = 0;
     for (const minion of Object.keys(this.response)) {
-      for (const results of this.response[minion]) {
-        if (results.result) {
+      for (const taskId of Object.keys(this.response[minion])) {
+        const r = this.response[minion][taskId]
+        if (r.result) {
           count += 1;
         }
       }
@@ -42,8 +43,9 @@ export class StateResponseHelper {
   public failures(): number {
     let count = 0;
     for (const minion of Object.keys(this.response)) {
-      for (const results of this.response[minion]) {
-        if (!results.result) {
+      for (const taskId of Object.keys(this.response[minion])) {
+        const r = this.response[minion][taskId]
+        if (!r.result) {
           count += 1;
         }
       }
@@ -60,7 +62,9 @@ export class StateResponseHelper {
     const saltLogOutput: string[] = [];
 
     for (const minion of Object.keys(this.response)) {
-      for (const s of this.response[minion]) {
+      for (const taskId of Object.keys(this.response[minion])) {
+        const s = this.response[minion][taskId];
+
         let state = "unknown";
         // state can be changed, ok or fatal
         if (Object.keys(s.changes!).length > 0) {

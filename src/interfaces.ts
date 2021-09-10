@@ -35,15 +35,17 @@ export interface ITestPingResult {
 export interface IStateHighStateRequest extends ISaltTargets {}
 export interface IStateHighStateResponse {
   [key: string]: {
-    __id__?: string;
-    result: boolean;
-    comment?: string;
-    duration?: number;
-    start_time?: string;
-    changes?: {
-      [key: string]: string;
+    [key: string]: {
+      __id__?: string;
+      result: boolean;
+      comment?: string;
+      duration?: number;
+      start_time?: string;
+      changes?: {
+        [key: string]: string;
+      }
     }
-  }[];
+  };
 }
 
 // Wheel
