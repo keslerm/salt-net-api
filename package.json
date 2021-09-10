@@ -1,5 +1,5 @@
 {
-  "name": "salt-net-api",
+  "name": "@keslerm/salt-net-api",
   "version": "0.2.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
