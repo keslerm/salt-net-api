@@ -4,7 +4,7 @@ import * as salt from "../interfaces"
 export class LocalClient extends SaltClient {
   public async testPing(
     request: salt.ITestPingRequest
-  ): Promise<salt.ITestPingResult> {
+  ): Promise<salt.ITestPingResponse> {
     await this.refreshToken();
 
     const response = await this.exec({
@@ -14,7 +14,7 @@ export class LocalClient extends SaltClient {
       tgt_type: request.tgt_type,
     });
 
-    return response.return[0] as salt.ITestPingResult;
+    return response.return[0] as salt.ITestPingResponse;
   }
 
   public async stateHighState(
@@ -66,6 +66,21 @@ export class LocalClient extends SaltClient {
     });
 
     return response.return[0] as salt.IServiceRestartResponse;
+  }
 
+  public async serviceStatus(request: salt.IServiceRestartRequest): Promise<salt.IServiceRestartResponse> {
+    await this.refreshToken();
+
+    const response = await this.exec({
+      client: "local",
+      fun: "service.status",
+      tgt: request.tgt,
+      tgt_type: request.tgt_type,
+      kwarg: {
+        name: request.name,
+      },
+    });
+
+    return response.return[0] as salt.IServiceRestartResponse;
   }
 }

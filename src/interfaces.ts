@@ -4,6 +4,7 @@ export interface ISaltConfigOptions {
   password: string;
   eauth: string;
 }
+
 export interface ISaltCommandRequest {
   [key: string]: any;
   tgt?: string;
@@ -19,6 +20,14 @@ interface ISaltTargets {
   tgt_type?: string;
 }
 
+interface IGenericBooleanResponse {
+  [key: string]: boolean;
+}
+
+interface IGenericStringResponse {
+  [key: string]: string;
+}
+
 // Local
 export interface ILocalGenericResponse {
   [key: string]: unknown 
@@ -26,17 +35,18 @@ export interface ILocalGenericResponse {
 
 // Ping
 export interface ITestPingRequest extends ISaltTargets {}
-export interface ITestPingResult {
-  [key: string]: boolean;
-}
+export interface ITestPingResponse extends IGenericBooleanResponse {}
 
 // Service
 export interface IServiceRestartRequest extends ISaltTargets {
   name: string;
 }
-export interface IServiceRestartResponse {
-  [key: string]: boolean;
+export interface IServiceRestartResponse extends IGenericBooleanResponse {}
+
+export interface IServiceStatusRequest extends ISaltTargets {
+  name: string;
 }
+export interface IServiceStatusResponse extends IGenericBooleanResponse {}
 
 // Grains
 export interface IGrainsSetRequest extends ISaltTargets {
