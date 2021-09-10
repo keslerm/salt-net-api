@@ -29,4 +29,17 @@ export class LocalClient extends SaltClient {
 
     return response.return[0] as salt.IStateHighStateResponse;
   }
+
+  public async grainsSet(request: salt.IGrainsSetRequest): Promise<salt.IGrainsSetResponse> {
+    await this.refreshToken();
+
+    const response = await this.exec({
+      client: "local",
+      fun: "grains.set",
+      tgt: request.tgt,
+      arg: request.arg,
+    });
+
+    return response.return[0] as salt.IGrainsSetResponse;
+  }
 }

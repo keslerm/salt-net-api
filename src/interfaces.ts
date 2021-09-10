@@ -30,6 +30,17 @@ export interface ITestPingResult {
   [key: string]: boolean;
 }
 
+// Grains
+export interface IGrainsSetRequest extends ISaltTargets {
+  arg: string[]
+}
+export interface IGrainsSetResponse {
+  [key: string]: {
+    comment: string;
+    changes: [key: string];
+    result: boolean;
+  }
+}
 
 // Highstate
 export interface IStateHighStateRequest extends ISaltTargets {}
