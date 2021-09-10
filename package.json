@@ -10,7 +10,7 @@
     "build": "tsc",
     "test": "jest --coverage --verbose",
     "clean": "rm -rf dist/",
-    "prepublish": "tsc"
+    "prepare": "tsc"
   },
   "devDependencies": {
     "@types/node": "^16.9.1",
