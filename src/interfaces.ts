@@ -30,9 +30,21 @@ export interface ITestPingResult {
   [key: string]: boolean;
 }
 
+// Service
+export interface IServiceRestartRequest extends ISaltTargets {
+  name: string;
+}
+export interface IServiceRestartResponse {
+  [key: string]: boolean;
+}
+
 // Grains
 export interface IGrainsSetRequest extends ISaltTargets {
-  arg: string[]
+  key: string;
+  value: string;
+  force?: boolean;
+  destructive?: boolean;
+  delimiter?: string;
 }
 export interface IGrainsSetResponse {
   [key: string]: {

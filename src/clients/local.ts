@@ -11,6 +11,7 @@ export class LocalClient extends SaltClient {
       client: "local",
       fun: "test.ping",
       tgt: request.tgt,
+      tgt_type: request.tgt_type,
     });
 
     return response.return[0] as salt.ITestPingResult;
@@ -25,6 +26,7 @@ export class LocalClient extends SaltClient {
       client: "local",
       fun: "state.highstate",
       tgt: request.tgt,
+      tgt_type: request.tgt_type,
     });
 
     return response.return[0] as salt.IStateHighStateResponse;
@@ -37,9 +39,33 @@ export class LocalClient extends SaltClient {
       client: "local",
       fun: "grains.set",
       tgt: request.tgt,
-      arg: request.arg,
+      tgt_type: request.tgt_type,
+      kwarg: {
+        key: request.key,
+        val: request.value,
+        force: request.force,
+        destructive: request.destructive,
+        delimiter: request.delimiter,
+      },
     });
 
     return response.return[0] as salt.IGrainsSetResponse;
+  }
+
+  public async serviceRestart(request: salt.IServiceRestartRequest): Promise<salt.IServiceRestartResponse> {
+    await this.refreshToken();
+
+    const response = await this.exec({
+      client: "local",
+      fun: "service.restart",
+      tgt: request.tgt,
+      tgt_type: request.tgt_type,
+      kwarg: {
+        name: request.name,
+      },
+    });
+
+    return response.return[0] as salt.IServiceRestartResponse;
+
   }
 }
