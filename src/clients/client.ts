@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import * as salt from "./interfaces";
+import * as salt from "../interfaces";
 
 export class SaltClient {
   private config: salt.ISaltConfigOptions;
@@ -26,7 +26,7 @@ export class SaltClient {
       },
     });
 
-    return response.data;
+    return response.data.return[0];
   }
 
   protected async refreshToken() {

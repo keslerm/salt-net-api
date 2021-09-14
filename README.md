@@ -4,7 +4,8 @@ This is a very opinionated client for the Salt Net API. The data from the Salt A
 
 There is a good chance this doesn't cover all use cases so I am open to some PR.
 
-Note: This is a work in progress
+Note: This is a work in progress, when I feel like the interfaces are stable enough to use i'll release version 1.0 and go from there, until then
+this should be considered alpha quality.
 
 ## Using
 

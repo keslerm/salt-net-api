@@ -1,4 +1,4 @@
-import { SaltClient } from "../salt-client";
+import { SaltClient } from "./client";
 import * as salt from "../interfaces";
 
 export class WheelClient extends SaltClient {
@@ -13,7 +13,7 @@ export class WheelClient extends SaltClient {
       match: request.match || "all",
     });
 
-    return response.return[0].data.return as salt.IListKeysResponse;
+    return response.data.return as salt.IListKeysResponse;
   }
 
   public async acceptKey(
@@ -29,7 +29,7 @@ export class WheelClient extends SaltClient {
       include_denied: request.include_denied,
     });
 
-    return response.return[0].data.return as salt.IAcceptKeyResponse;
+    return response.data.return as salt.IAcceptKeyResponse;
   }
 
 }

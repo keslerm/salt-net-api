@@ -33,22 +33,23 @@ export interface ILocalGenericResponse {
   [key: string]: unknown 
 }
 
-// Ping
+// test.ping
 export interface ITestPingRequest extends ISaltTargets {}
 export interface ITestPingResponse extends IGenericBooleanResponse {}
 
-// Service
+// service.restart
 export interface IServiceRestartRequest extends ISaltTargets {
   name: string;
 }
 export interface IServiceRestartResponse extends IGenericBooleanResponse {}
 
+// service.status
 export interface IServiceStatusRequest extends ISaltTargets {
   name: string;
 }
 export interface IServiceStatusResponse extends IGenericBooleanResponse {}
 
-// Grains
+// grains.set
 export interface IGrainsSetRequest extends ISaltTargets {
   key: string;
   value: string;
@@ -64,7 +65,20 @@ export interface IGrainsSetResponse {
   }
 }
 
-// Highstate
+export interface IPkgInstallRequest extends ISaltTargets {
+  name: string;
+  version?: string;
+}
+export interface IPkgInstallResponse {
+  [key: string]: {
+    [key: string]: {
+      old: string;
+      new: string;
+    }
+  }
+}
+
+// state.highstate
 export interface IStateHighStateRequest extends ISaltTargets {}
 export interface IStateHighStateResponse {
   [key: string]: {
@@ -81,7 +95,15 @@ export interface IStateHighStateResponse {
   };
 }
 
-// Wheel
+// state.sls
+export interface IStateSlsRequest extends ISaltTargets {
+  name: string;
+  test?: boolean;
+  exclude?: string;
+}
+export interface IStateSlsResponse extends IStateHighStateResponse {}
+
+// key.list_all
 export interface IListKeysResponse {
   minions: string[];
   minions_pre: string[];
@@ -89,17 +111,16 @@ export interface IListKeysResponse {
   minions_denied: string[];
   local: string[],
 }
-
 export interface IListKeysRequest {
   match?: string;
 }
 
+// key.accept
 export interface IAcceptKeyRequest {
   match: string;
   include_rejected?: boolean;
   include_denied?: boolean;
 }
-
 export interface IAcceptKeyResponse {
   minions: string[];
 }

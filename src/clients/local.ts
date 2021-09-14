@@ -1,7 +1,28 @@
-import { SaltClient } from "../salt-client";
+import { SaltClient } from "./client";
 import * as salt from "../interfaces"
 
 export class LocalClient extends SaltClient {
+  // Pkg
+  public async pkgInstall(
+    request: salt.IPkgInstallRequest
+  ): Promise<salt.IPkgInstallResponse> {
+    await this.refreshToken();
+
+    const results = await this.exec({
+      client: "local",
+      fun: "pkg.install",
+      tgt: request.tgt,
+      tgt_type: request.tgt_type,
+      kwarg: {
+        name: request.name,
+        version: request.version,
+      }
+    });
+
+    return results as salt.IPkgInstallResponse;
+  }
+
+  // Test
   public async testPing(
     request: salt.ITestPingRequest
   ): Promise<salt.ITestPingResponse> {
@@ -14,9 +35,10 @@ export class LocalClient extends SaltClient {
       tgt_type: request.tgt_type,
     });
 
-    return response.return[0] as salt.ITestPingResponse;
+    return response as salt.ITestPingResponse;
   }
 
+  // State
   public async stateHighState(
     request: salt.IStateHighStateRequest
   ): Promise<salt.IStateHighStateResponse> {
@@ -29,9 +51,10 @@ export class LocalClient extends SaltClient {
       tgt_type: request.tgt_type,
     });
 
-    return response.return[0] as salt.IStateHighStateResponse;
+    return response as salt.IStateHighStateResponse;
   }
 
+  // Grains
   public async grainsSet(request: salt.IGrainsSetRequest): Promise<salt.IGrainsSetResponse> {
     await this.refreshToken();
 
@@ -49,7 +72,7 @@ export class LocalClient extends SaltClient {
       },
     });
 
-    return response.return[0] as salt.IGrainsSetResponse;
+    return response as salt.IGrainsSetResponse;
   }
 
   public async serviceRestart(request: salt.IServiceRestartRequest): Promise<salt.IServiceRestartResponse> {
@@ -65,7 +88,7 @@ export class LocalClient extends SaltClient {
       },
     });
 
-    return response.return[0] as salt.IServiceRestartResponse;
+    return response as salt.IServiceRestartResponse;
   }
 
   public async serviceStatus(request: salt.IServiceRestartRequest): Promise<salt.IServiceRestartResponse> {
@@ -81,6 +104,6 @@ export class LocalClient extends SaltClient {
       },
     });
 
-    return response.return[0] as salt.IServiceRestartResponse;
+    return response as salt.IServiceRestartResponse;
   }
 }

@@ -1,4 +1,4 @@
-export { SaltClient } from './salt-client';
+export { SaltClient } from './clients/client';
 export { LocalClient } from './clients/local';
 export { WheelClient } from './clients/wheel';
 
