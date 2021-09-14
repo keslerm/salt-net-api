@@ -1,5 +1,6 @@
 import { SaltClient } from "./client";
 import * as salt from "../interfaces"
+import { format } from "path/posix";
 
 export class LocalClient extends SaltClient {
   // Pkg
@@ -86,9 +87,25 @@ export class LocalClient extends SaltClient {
       kwarg: {
         name: request.name,
       },
-    });
+    }) as salt.IGenericResponse;
 
-    return response as salt.IServiceRestartResponse;
+    // Opinion: this should return a better result
+    const formatted: salt.IServiceRestartResponse = {};
+
+    for (const target of Object.keys(response)) {
+      if (typeof response[target] === "boolean") {
+        formatted[target] = {
+          result: (response[target] as any),
+        }
+      } else {
+        formatted[target] = {
+          result: false,
+          message: (response[target] as any),
+        }
+      }
+    }
+
+    return formatted as salt.IServiceRestartResponse;
   }
 
   public async serviceStatus(request: salt.IServiceRestartRequest): Promise<salt.IServiceRestartResponse> {

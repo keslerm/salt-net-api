@@ -29,7 +29,7 @@ interface IGenericStringResponse {
 }
 
 // Local
-export interface ILocalGenericResponse {
+export interface IGenericResponse {
   [key: string]: unknown 
 }
 
@@ -41,7 +41,12 @@ export interface ITestPingResponse extends IGenericBooleanResponse {}
 export interface IServiceRestartRequest extends ISaltTargets {
   name: string;
 }
-export interface IServiceRestartResponse extends IGenericBooleanResponse {}
+export interface IServiceRestartResponse {
+  [key: string]: {
+    result: boolean;
+    message?: string;
+  }
+}
 
 // service.status
 export interface IServiceStatusRequest extends ISaltTargets {
