@@ -7,8 +7,6 @@ export class LocalClient extends SaltClient {
   public async pkgInstall(
     request: salt.IPkgInstallRequest
   ): Promise<salt.IPkgInstallResponse> {
-    await this.refreshToken();
-
     const results = await this.exec({
       client: "local",
       fun: "pkg.install",
@@ -27,8 +25,6 @@ export class LocalClient extends SaltClient {
   public async testPing(
     request: salt.ITestPingRequest
   ): Promise<salt.ITestPingResponse> {
-    await this.refreshToken();
-
     const response = await this.exec({
       client: "local",
       fun: "test.ping",
@@ -43,8 +39,6 @@ export class LocalClient extends SaltClient {
   public async stateHighState(
     request: salt.IStateHighStateRequest
   ): Promise<salt.IStateHighStateResponse> {
-    await this.refreshToken();
-
     const response = await this.exec({
       client: "local",
       fun: "state.highstate",
@@ -57,8 +51,6 @@ export class LocalClient extends SaltClient {
 
   // Grains
   public async grainsSet(request: salt.IGrainsSetRequest): Promise<salt.IGrainsSetResponse> {
-    await this.refreshToken();
-
     const response = await this.exec({
       client: "local",
       fun: "grains.set",
@@ -77,8 +69,6 @@ export class LocalClient extends SaltClient {
   }
 
   public async serviceRestart(request: salt.IServiceRestartRequest): Promise<salt.IServiceRestartResponse> {
-    await this.refreshToken();
-
     const response = await this.exec({
       client: "local",
       fun: "service.restart",
@@ -109,8 +99,6 @@ export class LocalClient extends SaltClient {
   }
 
   public async serviceStatus(request: salt.IServiceRestartRequest): Promise<salt.IServiceRestartResponse> {
-    await this.refreshToken();
-
     const response = await this.exec({
       client: "local",
       fun: "service.status",

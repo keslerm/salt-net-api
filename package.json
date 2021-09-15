@@ -1,6 +1,6 @@
 {
   "name": "salt-net-api",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "repository": "https://github.com/keslerm/salt-net-api",

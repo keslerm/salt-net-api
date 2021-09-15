@@ -18,7 +18,7 @@ export class SaltClient {
   }
 
   public async exec(command: salt.ISaltCommandRequest): Promise<any> {
-    this.refreshToken();
+    await this.refreshToken();
 
     const response = await this.client.post("/", command, {
       headers: {
