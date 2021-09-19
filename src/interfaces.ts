@@ -30,7 +30,7 @@ interface IGenericStringResponse {
 
 // Local
 export interface IGenericResponse {
-  [key: string]: unknown 
+  [key: string]: any 
 }
 
 // test.ping

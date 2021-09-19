@@ -1,13 +1,12 @@
 import { SaltClient } from "./client";
 import * as salt from "../interfaces"
-import { format } from "path/posix";
 
 export class LocalClient extends SaltClient {
   // Pkg
   public async pkgInstall(
     request: salt.IPkgInstallRequest
   ): Promise<salt.IPkgInstallResponse> {
-    const results = await this.exec({
+    const results = await this.exec<salt.IPkgInstallResponse>({
       client: "local",
       fun: "pkg.install",
       tgt: request.tgt,
@@ -18,40 +17,40 @@ export class LocalClient extends SaltClient {
       }
     });
 
-    return results as salt.IPkgInstallResponse;
+    return results;
   }
 
   // Test
   public async testPing(
     request: salt.ITestPingRequest
   ): Promise<salt.ITestPingResponse> {
-    const response = await this.exec({
+    const response = await this.exec<salt.ITestPingResponse>({
       client: "local",
       fun: "test.ping",
       tgt: request.tgt,
       tgt_type: request.tgt_type,
     });
 
-    return response as salt.ITestPingResponse;
+    return response;
   }
 
   // State
   public async stateHighState(
     request: salt.IStateHighStateRequest
   ): Promise<salt.IStateHighStateResponse> {
-    const response = await this.exec({
+    const response = await this.exec<salt.IStateHighStateResponse>({
       client: "local",
       fun: "state.highstate",
       tgt: request.tgt,
       tgt_type: request.tgt_type,
     });
 
-    return response as salt.IStateHighStateResponse;
+    return response;
   }
 
   // Grains
   public async grainsSet(request: salt.IGrainsSetRequest): Promise<salt.IGrainsSetResponse> {
-    const response = await this.exec({
+    const response = await this.exec<salt.IGrainsSetResponse>({
       client: "local",
       fun: "grains.set",
       tgt: request.tgt,
@@ -65,11 +64,11 @@ export class LocalClient extends SaltClient {
       },
     });
 
-    return response as salt.IGrainsSetResponse;
+    return response;
   }
 
   public async serviceRestart(request: salt.IServiceRestartRequest): Promise<salt.IServiceRestartResponse> {
-    const response = await this.exec({
+    const response = await this.exec<salt.IGenericResponse>({
       client: "local",
       fun: "service.restart",
       tgt: request.tgt,
@@ -77,7 +76,7 @@ export class LocalClient extends SaltClient {
       kwarg: {
         name: request.name,
       },
-    }) as salt.IGenericResponse;
+    });
 
     // Opinion: this should return a better result
     const formatted: salt.IServiceRestartResponse = {};
@@ -95,11 +94,11 @@ export class LocalClient extends SaltClient {
       }
     }
 
-    return formatted as salt.IServiceRestartResponse;
+    return formatted;
   }
 
-  public async serviceStatus(request: salt.IServiceRestartRequest): Promise<salt.IServiceRestartResponse> {
-    const response = await this.exec({
+  public async serviceStatus(request: salt.IServiceRestartRequest): Promise<salt.IServiceStatusResponse> {
+    const response = await this.exec<salt.IServiceStatusResponse>({
       client: "local",
       fun: "service.status",
       tgt: request.tgt,
@@ -109,6 +108,6 @@ export class LocalClient extends SaltClient {
       },
     });
 
-    return response as salt.IServiceRestartResponse;
+    return response;
   }
 }

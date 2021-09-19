@@ -5,7 +5,7 @@ export class WheelClient extends SaltClient {
   public async listKeys(
     request: salt.IListKeysRequest
   ): Promise<salt.IListKeysResponse> {
-    const response = await this.exec({
+    const response = await this.exec<salt.IGenericResponse>({
       fun: "key.list",
       client: "wheel",
       match: request.match || "all",
@@ -17,7 +17,7 @@ export class WheelClient extends SaltClient {
   public async acceptKey(
     request: salt.IAcceptKeyRequest
   ): Promise<salt.IAcceptKeyResponse> {
-    const response = await this.exec({
+    const response = await this.exec<salt.IGenericResponse>({
       fun: "key.accept",
       client: "wheel",
       match: request.match,
