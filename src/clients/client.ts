@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import * as salt from "../interfaces";
+import * as salt from "../modules/common";
 
 export class SaltClient {
   private config: salt.ISaltConfigOptions;

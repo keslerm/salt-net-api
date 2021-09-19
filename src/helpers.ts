@@ -1,5 +1,5 @@
 import * as os from "os";
-import { IStateHighStateResponse } from "./interfaces";
+import { state } from "./modules/local";
 
 interface ISaltLogFormat {
   [key: string]: {
@@ -13,9 +13,9 @@ interface ISaltLogFormat {
  * Helper class for performing various tasks on the result of the state functions
  */
 export class StateResponseHelper {
-  response: IStateHighStateResponse;
+  response: state.IStateHighStateResponse;
 
-  constructor(response: IStateHighStateResponse) {
+  constructor(response: state.IStateHighStateResponse) {
     this.response = response;
   }
 

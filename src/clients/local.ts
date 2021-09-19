@@ -1,12 +1,13 @@
 import { SaltClient } from "./client";
-import * as salt from "../interfaces";
+import * as local from "../modules/local";
+import * as common from "../modules/common";
 
 export class LocalClient extends SaltClient {
   // Pkg
   public async pkgInstall(
-    request: salt.IPkgInstallRequest
-  ): Promise<salt.IPkgInstallResponse> {
-    const results = await this.exec<salt.IPkgInstallResponse>({
+    request: local.pkg.IPkgInstallRequest
+  ): Promise<local.pkg.IPkgInstallResponse> {
+    const results = await this.exec<local.pkg.IPkgInstallResponse>({
       client: "local",
       fun: "pkg.install",
       tgt: request.tgt,
@@ -22,9 +23,9 @@ export class LocalClient extends SaltClient {
 
   // Test
   public async testPing(
-    request: salt.ITestPingRequest
-  ): Promise<salt.ITestPingResponse> {
-    const response = await this.exec<salt.ITestPingResponse>({
+    request: local.test.ITestPingRequest
+  ): Promise<local.test.ITestPingResponse> {
+    const response = await this.exec<local.test.ITestPingResponse>({
       client: "local",
       fun: "test.ping",
       tgt: request.tgt,
@@ -36,9 +37,9 @@ export class LocalClient extends SaltClient {
 
   // State
   public async stateHighState(
-    request: salt.IStateHighStateRequest
-  ): Promise<salt.IStateHighStateResponse> {
-    const response = await this.exec<salt.IStateHighStateResponse>({
+    request: local.state.IStateHighStateRequest
+  ): Promise<local.state.IStateHighStateResponse> {
+    const response = await this.exec<local.state.IStateHighStateResponse>({
       client: "local",
       fun: "state.highstate",
       tgt: request.tgt,
@@ -50,9 +51,9 @@ export class LocalClient extends SaltClient {
 
   // Grains
   public async grainsSet(
-    request: salt.IGrainsSetRequest
-  ): Promise<salt.IGrainsSetResponse> {
-    const response = await this.exec<salt.IGrainsSetResponse>({
+    request: local.grains.IGrainsSetRequest
+  ): Promise<local.grains.IGrainsSetResponse> {
+    const response = await this.exec<local.grains.IGrainsSetResponse>({
       client: "local",
       fun: "grains.set",
       tgt: request.tgt,
@@ -70,9 +71,9 @@ export class LocalClient extends SaltClient {
   }
 
   public async serviceRestart(
-    request: salt.IServiceRestartRequest
-  ): Promise<salt.IServiceRestartResponse> {
-    const response = await this.exec<salt.IGenericResponse>({
+    request: local.service.IServiceRestartRequest
+  ): Promise<local.service.IServiceRestartResponse> {
+    const response = await this.exec<common.IGenericResponse>({
       client: "local",
       fun: "service.restart",
       tgt: request.tgt,
@@ -83,7 +84,7 @@ export class LocalClient extends SaltClient {
     });
 
     // Opinion: this should return a better result
-    const formatted: salt.IServiceRestartResponse = {};
+    const formatted: local.service.IServiceRestartResponse = {};
 
     for (const target of Object.keys(response)) {
       if (typeof response[target] === "boolean") {
@@ -102,9 +103,9 @@ export class LocalClient extends SaltClient {
   }
 
   public async serviceStatus(
-    request: salt.IServiceRestartRequest
-  ): Promise<salt.IServiceStatusResponse> {
-    const response = await this.exec<salt.IServiceStatusResponse>({
+    request: local.service.IServiceRestartRequest
+  ): Promise<local.service.IServiceStatusResponse> {
+    const response = await this.exec<local.service.IServiceStatusResponse>({
       client: "local",
       fun: "service.status",
       tgt: request.tgt,
