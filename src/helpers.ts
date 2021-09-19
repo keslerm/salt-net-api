@@ -1,5 +1,5 @@
-import * as os from 'os';
-import { IStateHighStateResponse } from './interfaces';
+import * as os from "os";
+import { IStateHighStateResponse } from "./interfaces";
 
 interface ISaltLogFormat {
   [key: string]: {
@@ -30,7 +30,7 @@ export class StateResponseHelper {
     let count = 0;
     for (const minion of Object.keys(this.response)) {
       for (const taskId of Object.keys(this.response[minion])) {
-        const r = this.response[minion][taskId]
+        const r = this.response[minion][taskId];
         if (r.result) {
           count += 1;
         }
@@ -44,7 +44,7 @@ export class StateResponseHelper {
     let count = 0;
     for (const minion of Object.keys(this.response)) {
       for (const taskId of Object.keys(this.response[minion])) {
-        const r = this.response[minion][taskId]
+        const r = this.response[minion][taskId];
         if (!r.result) {
           count += 1;
         }

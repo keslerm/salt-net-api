@@ -1,5 +1,5 @@
 import { SaltClient } from "./client";
-import * as salt from "../interfaces"
+import * as salt from "../interfaces";
 
 export class LocalClient extends SaltClient {
   // Pkg
@@ -14,7 +14,7 @@ export class LocalClient extends SaltClient {
       kwarg: {
         name: request.name,
         version: request.version,
-      }
+      },
     });
 
     return results;
@@ -49,7 +49,9 @@ export class LocalClient extends SaltClient {
   }
 
   // Grains
-  public async grainsSet(request: salt.IGrainsSetRequest): Promise<salt.IGrainsSetResponse> {
+  public async grainsSet(
+    request: salt.IGrainsSetRequest
+  ): Promise<salt.IGrainsSetResponse> {
     const response = await this.exec<salt.IGrainsSetResponse>({
       client: "local",
       fun: "grains.set",
@@ -67,7 +69,9 @@ export class LocalClient extends SaltClient {
     return response;
   }
 
-  public async serviceRestart(request: salt.IServiceRestartRequest): Promise<salt.IServiceRestartResponse> {
+  public async serviceRestart(
+    request: salt.IServiceRestartRequest
+  ): Promise<salt.IServiceRestartResponse> {
     const response = await this.exec<salt.IGenericResponse>({
       client: "local",
       fun: "service.restart",
@@ -84,20 +88,22 @@ export class LocalClient extends SaltClient {
     for (const target of Object.keys(response)) {
       if (typeof response[target] === "boolean") {
         formatted[target] = {
-          result: (response[target] as any),
-        }
+          result: response[target] as any,
+        };
       } else {
         formatted[target] = {
           result: false,
-          message: (response[target] as any),
-        }
+          message: response[target] as any,
+        };
       }
     }
 
     return formatted;
   }
 
-  public async serviceStatus(request: salt.IServiceRestartRequest): Promise<salt.IServiceStatusResponse> {
+  public async serviceStatus(
+    request: salt.IServiceRestartRequest
+  ): Promise<salt.IServiceStatusResponse> {
     const response = await this.exec<salt.IServiceStatusResponse>({
       client: "local",
       fun: "service.status",

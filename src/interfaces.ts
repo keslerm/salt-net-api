@@ -30,7 +30,7 @@ interface IGenericStringResponse {
 
 // Local
 export interface IGenericResponse {
-  [key: string]: any 
+  [key: string]: any;
 }
 
 // test.ping
@@ -45,7 +45,7 @@ export interface IServiceRestartResponse {
   [key: string]: {
     result: boolean;
     message?: string;
-  }
+  };
 }
 
 // service.status
@@ -67,7 +67,7 @@ export interface IGrainsSetResponse {
     comment: string;
     changes: [key: string];
     result: boolean;
-  }
+  };
 }
 
 export interface IPkgInstallRequest extends ISaltTargets {
@@ -79,8 +79,8 @@ export interface IPkgInstallResponse {
     [key: string]: {
       old: string;
       new: string;
-    }
-  }
+    };
+  };
 }
 
 // state.highstate
@@ -95,8 +95,8 @@ export interface IStateHighStateResponse {
       start_time?: string;
       changes?: {
         [key: string]: string;
-      }
-    }
+      };
+    };
   };
 }
 
@@ -114,7 +114,7 @@ export interface IListKeysResponse {
   minions_pre: string[];
   minions_rejected: string[];
   minions_denied: string[];
-  local: string[],
+  local: string[];
 }
 export interface IListKeysRequest {
   match?: string;
