@@ -1,1 +1,1 @@
-export * as key from './wheel/key';
+export * as key from "./wheel/key";
