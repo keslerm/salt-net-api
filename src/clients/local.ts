@@ -1,120 +1,59 @@
-import { SaltClient } from "./client";
-import * as local from "../modules/local";
-import * as common from "../modules/common";
+import * as core from "../modules/core";
+import { SaltClient } from "../client";
 
+/**
+ * Interact with the Salt API's local client.
+ */
 export class LocalClient extends SaltClient {
-  // Pkg
-  public async pkgInstall(
-    request: local.pkg.IPkgInstallRequest
-  ): Promise<local.pkg.IPkgInstallResponse> {
-    const results = await this.exec<local.pkg.IPkgInstallResponse>({
+  /**
+   * Executes a command against the Salt API's local client
+   *
+   * @typeParam T - The arguments for the request
+   * @typeParam U - The returning type format
+   * @param request - The request to execute
+   * @returns - Returns the results of the command
+   */
+  public async exec<T, U>(request: T): Promise<U> {
+    await this.refreshToken();
+
+    const command = {
       client: "local",
-      fun: "pkg.install",
-      tgt: request.tgt,
-      tgt_type: request.tgt_type,
-      kwarg: {
-        name: request.name,
-        version: request.version,
+      ...request,
+    };
+
+    console.log(`Request: ${JSON.stringify(command)}`);
+    const response = await this.client.post("/", command, {
+      headers: {
+        "X-Auth-Token": this.token,
       },
     });
 
-    return results;
+    return response.data.return[0];
   }
 
-  // Test
-  public async testPing(
-    request: local.test.ITestPingRequest
-  ): Promise<local.test.ITestPingResponse> {
-    const response = await this.exec<local.test.ITestPingResponse>({
-      client: "local",
-      fun: "test.ping",
-      tgt: request.tgt,
-      tgt_type: request.tgt_type,
-    });
+  /**
+   * Executes a command against the Salt API's local_async client
+   *
+   * @typeParam T - The arguments for the request
+   * @param request - The request to execute
+   * @returns - Returns the results of the command
+   */
+  public async execAsync<T>(
+    request: T
+  ): Promise<core.ILocalAsyncResponse> {
+    await this.refreshToken();
 
-    return response;
-  }
+    const command = {
+      client: "local_async",
+      ...request,
+    };
 
-  // State
-  public async stateHighState(
-    request: local.state.IStateHighStateRequest
-  ): Promise<local.state.IStateHighStateResponse> {
-    const response = await this.exec<local.state.IStateHighStateResponse>({
-      client: "local",
-      fun: "state.highstate",
-      tgt: request.tgt,
-      tgt_type: request.tgt_type,
-    });
-
-    return response;
-  }
-
-  // Grains
-  public async grainsSet(
-    request: local.grains.IGrainsSetRequest
-  ): Promise<local.grains.IGrainsSetResponse> {
-    const response = await this.exec<local.grains.IGrainsSetResponse>({
-      client: "local",
-      fun: "grains.set",
-      tgt: request.tgt,
-      tgt_type: request.tgt_type,
-      kwarg: {
-        key: request.key,
-        val: request.value,
-        force: request.force,
-        destructive: request.destructive,
-        delimiter: request.delimiter,
+    const response = await this.client.post("/", command, {
+      headers: {
+        "X-Auth-Token": this.token,
       },
     });
 
-    return response;
-  }
-
-  public async serviceRestart(
-    request: local.service.IServiceRestartRequest
-  ): Promise<local.service.IServiceRestartResponse> {
-    const response = await this.exec<common.IGenericResponse>({
-      client: "local",
-      fun: "service.restart",
-      tgt: request.tgt,
-      tgt_type: request.tgt_type,
-      kwarg: {
-        name: request.name,
-      },
-    });
-
-    // Opinion: this should return a better result
-    const formatted: local.service.IServiceRestartResponse = {};
-
-    for (const target of Object.keys(response)) {
-      if (typeof response[target] === "boolean") {
-        formatted[target] = {
-          result: response[target] as any,
-        };
-      } else {
-        formatted[target] = {
-          result: false,
-          message: response[target] as any,
-        };
-      }
-    }
-
-    return formatted;
-  }
-
-  public async serviceStatus(
-    request: local.service.IServiceRestartRequest
-  ): Promise<local.service.IServiceStatusResponse> {
-    const response = await this.exec<local.service.IServiceStatusResponse>({
-      client: "local",
-      fun: "service.status",
-      tgt: request.tgt,
-      tgt_type: request.tgt_type,
-      kwarg: {
-        name: request.name,
-      },
-    });
-
-    return response;
+    return response.data.return[0];
   }
 }

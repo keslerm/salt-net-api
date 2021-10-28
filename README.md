@@ -1,39 +1,67 @@
 # Salt Net API
 
-This is a very opinionated client for the Salt Net API. The data from the Salt API is honestly a mess and so this is my attempt to handle it better. 
-
-There is a good chance this doesn't cover all use cases so I am open to some PR.
-
-Note: This is a work in progress, when I feel like the interfaces are stable enough to use i'll release version 1.0 and go from there, until then
-this should be considered alpha quality.
+This tries to be a minimal but extremely helpful client for interacting with the SaltStack Net API. The goal is to provide a simple interface and a 
+set of types to minimize the amount of back and forth with the documentation needed.
 
 ## Using
 
-Really simply, it follows a very similar setup tha the python netapi does and also exposes some helper stuff
-
-
 ```javascript
-import { LocalClient, WheelClient } from "salt-net-api";
+import { LocalClient, WheelClient, Core, Modules, Runner } from "salt-net-api";
 
-export const saltClientLocal = new LocalClient({
+// Create a connection to the Local salt client
+export const local = new LocalClient({
   endpoint: process.env.SALT_ENDPOINT!,
   username: process.env.SALT_USERNAME!,
   password: process.env.SALT_PASSWORD!,
   eauth: "file",
 });
 
-const a2 = saltClientLocal.testPing({
+// Define the request type and the expected response type.
+const a2 = await local.exec<Modules.Test.IPingRequest, Modules.Test.IPingResult>({
+  fun: "test.ping",
   tgt: "test-site",
 });
 
-export const saltClientWheel = new WheelClient({
+// You can also execute against the async client where available
+const asyncResponse: Core.ILocalAsyncResponse = await local.execAsync<Modules.Service.IRestartRequest>({
+  fun: "service.restart",
+  kwarg: {
+    // The type inference will validate that you are passing this required argument
+    name: "service-name",
+  },
+});
+
+// Other clients are also available
+export const wheel = new WheelClient({
   endpoint: process.env.SALT_ENDPOINT!,
   username: process.env.SALT_USERNAME!,
   password: process.env.SALT_PASSWORD!,
   eauth: "file",
 });
 
-const a1 = saltClientWheel.listKeys({
+// This also works for other clients
+const a1 = await wheel.exec<Runner.Key.IListRequest, Runner.Key.IListResponse>({
+  fun: "key.list",
   match: "pre",
-})
+});
+
+// If a type is missing you can easily specify it yourself
+interface INginxStatusRequest extends Core.ILocalRequest {
+  kwarg: {
+    url: string;
+  }
+}
+interface INginxStatusResponse {
+  [key: string]: {
+    connections: number;
+    status: boolean;
+  }
+}
+
+const customTypeResponse = await local.exec<INginxStatusRequest, INginxStatusResponse>({
+  fun: "nginx.status",
+  kwarg: {
+    url: "http://localhost",
+  }
+});
 ```
