@@ -6,6 +6,7 @@ export interface IPrintJobRequest extends Core.IRunnerRequest {
   };
 }
 
+// This is honestly a mess but it's the structure of it so yeah.
 export interface IPrintJobResult<T> {
   [key: string]: {
     Function: string;
