@@ -6,9 +6,7 @@ export interface IRestartRequest extends Core.ILocalRequest {
   }
 }
 export interface IRestartResponse {
-  [key: string]: {
-    result: string | boolean;
-  };
+  [key: string]: string | boolean;
 }
 
 export interface IStatusRequest extends Core.ILocalRequest {
