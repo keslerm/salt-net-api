@@ -1,11 +1,11 @@
 import { SaltClient } from "../client";
 
-export class WheelClient extends SaltClient {
+export class RunnerClient extends SaltClient {
   public async exec<T, U>(request: T): Promise<U> {
     await this.refreshToken();
 
     const command = {
-      client: "wheel",
+      client: "runner",
       ...request,
     };
 
@@ -14,7 +14,7 @@ export class WheelClient extends SaltClient {
         "X-Auth-Token": this.token,
       },
     });
-
-    return response.data.return[0].data.return;
+    
+    return response.data.return[0];
   }
 }

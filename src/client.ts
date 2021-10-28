@@ -1,32 +1,27 @@
 import axios, { AxiosInstance } from "axios";
-import * as salt from "../modules/common";
+import * as salt from "./modules/core";
 
-export class SaltClient {
-  private config: salt.ISaltConfigOptions;
+export interface ISaltConfigOptions {
+  endpoint: string;
+  username: string;
+  password: string;
+  eauth: string;
+}
 
-  private token: string | null = null;
-  private expires: number | null = null;
+export abstract class SaltClient {
+  protected config: ISaltConfigOptions;
 
-  private client: AxiosInstance;
+  protected token: string | null = null;
+  protected expires: number | null = null;
 
-  constructor(config: salt.ISaltConfigOptions) {
+  protected client: AxiosInstance;
+
+  constructor(config: ISaltConfigOptions) {
     this.config = config;
 
     this.client = axios.create({
       baseURL: `${this.config.endpoint}`,
     });
-  }
-
-  public async exec<T>(command: salt.ISaltCommandRequest): Promise<T> {
-    await this.refreshToken();
-
-    const response = await this.client.post("/", command, {
-      headers: {
-        "X-Auth-Token": this.token,
-      },
-    });
-
-    return response.data.return[0];
   }
 
   protected async refreshToken() {
