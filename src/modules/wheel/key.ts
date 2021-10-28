@@ -17,6 +17,6 @@ export interface IAcceptRequest extends Core.IRunnerRequest {
   include_rejected?: boolean;
   include_denied?: boolean;
 }
-export interface IAcceptRequest {
+export interface IAcceptResponse {
   minions: string[];
 }
