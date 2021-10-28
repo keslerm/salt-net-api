@@ -18,7 +18,7 @@ export interface IHighStateResponse {
 
 export interface ISlsRequest extends Core.ILocalRequest {
   kwarg: {
-    name: string;
+    mods: string;
     test?: boolean;
     exclude?: string;
   }
