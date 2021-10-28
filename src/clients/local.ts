@@ -21,7 +21,6 @@ export class LocalClient extends SaltClient {
       ...request,
     };
 
-    console.log(`Request: ${JSON.stringify(command)}`);
     const response = await this.client.post("/", command, {
       headers: {
         "X-Auth-Token": this.token,
