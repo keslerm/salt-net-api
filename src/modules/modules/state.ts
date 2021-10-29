@@ -5,6 +5,8 @@ export interface IHighStateResponse {
   [key: string]: {
     [key: string]: {
       __id__?: string;
+      __run_num__?: number;
+      __sls__?: string;
       result: boolean;
       comment?: string;
       duration?: number;
