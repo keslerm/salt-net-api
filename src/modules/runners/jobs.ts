@@ -1,5 +1,20 @@
 import * as Core from "../core";
 
+export interface ILookupJobRequest extends Core.IRunnerRequest {
+  kwarg: {
+    jid: string;
+  };
+}
+
+/**
+ * Looking up jobs that have a special outputter needs to be wrapped in it's own type, so this is provided as a convince. Ultimately
+ * this is just one of the many Salt quirks that makes typing things out very difficult
+ */
+export interface ILookupJobWithOutputterResponse<T> {
+  outputter: string;
+  data: T
+}
+
 export interface IPrintJobRequest extends Core.IRunnerRequest {
   kwarg: {
     jid: string;
