@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from "axios";
-import * as salt from "./modules/core";
+import * as salt from "./index";
 
 export interface ISaltConfigOptions {
   endpoint: string;
@@ -22,6 +22,24 @@ export abstract class SaltClient {
     this.client = axios.create({
       baseURL: `${this.config.endpoint}`,
     });
+  }
+
+  /**
+   * Will query the Salt API /jobs/jid endpoint to retrieve job information
+   * @typeParam T - The type of the job results
+   * @param jid Job to lookup
+   * @returns A job
+   */
+  public async lookupJob<T>(jid: string): Promise<salt.Core.ILookupJobResponse<T>> {
+    await this.refreshToken();
+
+    const result = await this.client.get(`/jobs/${jid}`, {
+      headers: {
+        "X-Auth-Token": this.token,
+      }
+    });
+
+    return result.data;
   }
 
   protected async refreshToken() {

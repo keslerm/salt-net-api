@@ -38,3 +38,21 @@ export interface IRunnerRequest {
   fun: string;
   kwarg?: unknown;
 }
+
+/**
+ * Response type for the lookupJob method
+ * @typeParam T - The type of job
+ */
+export interface ILookupJobResponse<T> {
+  info: {
+    jid: string;
+    Function: string;
+    Arguments: string[];
+    Target: string;
+    "Target-type": string;
+    User: string; 
+    StartTime: string;
+    Result: unknown;
+  };
+  return: T[],
+}
