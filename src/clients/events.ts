@@ -97,13 +97,11 @@ export class EventsClient extends SaltClient {
       ) {
         console.log("startswith matched event");
         subscribers.push(sub);
-      } else if (
-        sub.matcher === Matchers.Regex
-      ) {
+      } else if (sub.matcher === Matchers.Regex) {
         const r = new RegExp(sub.tag);
         if (r.test(tag)) {
           subscribers.push(sub);
-        } 
+        }
       } else {
         // Just in case
         throw new Error("Invalid tag match type");
@@ -140,7 +138,7 @@ export class EventsClient extends SaltClient {
 
   /**
    * Unsubscribes a handler from the event stream
-   * @param id - The id of the handler subscription as returned from subscribe 
+   * @param id - The id of the handler subscription as returned from subscribe
    */
   public unsubscribe(id: number) {
     console.trace(`removing sub for ${id}`);
