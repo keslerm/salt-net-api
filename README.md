@@ -104,6 +104,21 @@ client.subscribe({
 await client.start();
 ```
 
+You can also use the helper `fireOnce` method to trigger on the first message
+
+```typescript
+client.start();
+
+const result = await client.fireOnce({
+  tag: "salt/auth",
+  handler: (event: any) => {
+    return event.some_data;
+  },
+});
+
+console.log(result); // contents of event.some_data
+```
+
 ## Why
 
 I wanted to create a way to easily interact with the SaltStack Net API while also taking advantage of TypeScript's ability to type things to make

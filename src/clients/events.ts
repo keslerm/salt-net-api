@@ -161,7 +161,7 @@ export class EventsClient extends SaltClient {
         matcher: subscriber.matcher,
         handler: async (event: any) => {
           // event has been found, trigger function
-          console.trace("got matching event");
+          console.debug("got matching event");
 
           this.unsubscribe(id);
           resolve(event);
