@@ -9,6 +9,7 @@ export interface ISaltEvent {
 export enum Matchers {
   Exact,
   StartsWith,
+  Regex,
 }
 
 export interface ISubscriber {
@@ -54,7 +55,7 @@ export class EventsClient extends SaltClient {
 
     this.source.onopen = () => {
       // TODO: Something else??
-      console.debug("connected to events");
+      console.debug("connected to salt event bus");
     };
 
     this.source.onerror = (err: any) => {
@@ -69,24 +70,47 @@ export class EventsClient extends SaltClient {
   }
 
   private async publish(event: ISaltEvent) {
-    // TODO: This could be a bottleneck at some point?
+    const subscribers = this.findSubscribers(event.tag);
+
+    for (const subscriber of subscribers) {
+      subscriber.handler(event);
+    }
+  }
+
+  /**
+   * Returns a list of matching subscribers for the specific tag
+   * @param tag - The tag of the event
+   * @returns The matching subscribers
+   */
+  public findSubscribers(tag: string): ISubscriber[] {
+    const subscribers: ISubscriber[] = [];
+
     for (const id of Object.keys(this.subscribers)) {
       const sub = this.subscribers[id];
 
-      if (sub.matcher === Matchers.Exact && sub.tag === event.tag) {
+      if (sub.matcher === Matchers.Exact && sub.tag === tag) {
         console.log("equals matched event");
-        sub.handler(event);
+        subscribers.push(sub);
       } else if (
         sub.matcher === Matchers.StartsWith &&
-        event.tag.startsWith(sub.tag)
+        tag.startsWith(sub.tag)
       ) {
         console.log("startswith matched event");
-        sub.handler(event);
+        subscribers.push(sub);
+      } else if (
+        sub.matcher === Matchers.Regex
+      ) {
+        const r = new RegExp(sub.tag);
+        if (r.test(tag)) {
+          subscribers.push(sub);
+        } 
       } else {
         // Just in case
         throw new Error("Invalid tag match type");
       }
     }
+
+    return subscribers;
   }
 
   /**
@@ -97,7 +121,7 @@ export class EventsClient extends SaltClient {
   public subscribe(subscriber: ISubscriber): number {
     this.id += 1;
 
-    console.trace(`subscribing to ${subscriber.tag}`);
+    console.debug(`subscribing to ${subscriber.tag}`);
     this.subscribers[this.id] = {
       tag: subscriber.tag,
       handler: subscriber.handler,
