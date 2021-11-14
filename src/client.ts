@@ -1,5 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 import * as salt from "./index";
+import EventSource from 'eventsource';
 
 export interface ISaltConfigOptions {
   endpoint: string;

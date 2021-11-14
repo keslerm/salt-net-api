@@ -16,7 +16,9 @@ Eventually when things look more solid I might generate these automatically from
 
 ## Using This Client
 
-```javascript
+This client provides a few abstractions around the matching Salt clients.
+
+```typescript
 import { LocalClient, WheelClient, Core, Modules, Runner } from "salt-net-api";
 
 // Create a connection to the Local salt client
@@ -75,6 +77,46 @@ const customTypeResponse = await local.exec<INginxStatusRequest, INginxStatusRes
     url: "http://localhost",
   }
 });
+```
+
+## Events Client
+
+The SaltStack Event Bus is an incredibly useful tool for building event driven automation and functionality from. The events client allows you to easily
+leverage this functionality.
+
+```typescript
+import { EventsClient } from 'salt-net-api';
+
+const client = new EventsClient({
+  endpoint: process.env.SALT_ENDPOINT!,
+  username: process.env.SALT_USERNAME!,
+  password: process.env.SALT_PASSWORD!,
+  eauth: "file",
+});
+
+client.subscribe({
+  tag: "salt/auth",
+  handler: (event: any) => {
+    console.log(event);
+  }
+});
+
+await client.start();
+```
+
+You can also use the helper `fireOnce` method to trigger on the first message
+
+```typescript
+client.start();
+
+const result = await client.fireOnce({
+  tag: "salt/auth",
+  handler: (event: any) => {
+    return event.some_data;
+  },
+});
+
+console.log(result); // contents of event.some_data
 ```
 
 ## Why

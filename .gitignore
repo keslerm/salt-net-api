@@ -1,4 +1,5 @@
 dist/
 node_modules/
 .vscode
-src/test.ts
+src/console.ts
+coverage

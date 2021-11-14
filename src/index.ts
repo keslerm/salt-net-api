@@ -2,6 +2,7 @@
 export { LocalClient } from "./clients/local";
 export { WheelClient } from "./clients/wheel";
 export { RunnerClient } from "./clients/runner";
+export { EventsClient } from "./clients/events";
 
 // Modules
 export * as Core from "./modules/core";
