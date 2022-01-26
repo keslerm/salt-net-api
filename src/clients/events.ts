@@ -88,15 +88,16 @@ export class EventsClient extends SaltClient {
     for (const id of Object.keys(this.subscribers)) {
       const sub = this.subscribers[id];
 
-      if (sub.matcher === Matchers.Exact && sub.tag === tag) {
-        console.log("equals matched event");
-        subscribers.push(sub);
-      } else if (
-        sub.matcher === Matchers.StartsWith &&
-        tag.startsWith(sub.tag)
-      ) {
-        console.log("startswith matched event");
-        subscribers.push(sub);
+      if (sub.matcher === Matchers.Exact) {
+        if (sub.tag === tag) {
+          console.log("equals matched event");
+          subscribers.push(sub);
+        }
+      } else if (sub.matcher === Matchers.StartsWith) {
+        if (tag.startsWith(sub.tag)) {
+          console.log("startswith matched event");
+          subscribers.push(sub);
+        }
       } else if (sub.matcher === Matchers.Regex) {
         const r = new RegExp(sub.tag);
         if (r.test(tag)) {
@@ -141,7 +142,7 @@ export class EventsClient extends SaltClient {
    * @param id - The id of the handler subscription as returned from subscribe
    */
   public unsubscribe(id: number) {
-    console.trace(`removing sub for ${id}`);
+    console.debug(`removing sub for ${id}`);
     delete this.subscribers[id];
   }
 

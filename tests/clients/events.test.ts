@@ -23,6 +23,28 @@ describe("test findSubscribers", () => {
     expect(subscribers[0]).toEqual(sub);
   });
 
+  it("not return anything if a match is not found", () => {
+    const sub: ISubscriber = {
+      matcher: Matchers.Exact,
+      tag: "test/tag2",
+      handler: (event: any) => {},
+    };
+
+    const client = new EventsClient({
+      eauth: "pam",
+      endpoint: "http://localhost",
+      username: "test",
+      password: "test",
+    });
+
+    client.subscribe(sub);
+
+    const subscribers: ISubscriber[] = client.findSubscribers("test/tag");
+
+    expect(subscribers.length).toBe(0);
+  });
+
+
   it("should return when a startswith match is found", () => {
     const sub: ISubscriber = {
       matcher: Matchers.StartsWith,
