@@ -90,12 +90,10 @@ export class EventsClient extends SaltClient {
 
       if (sub.matcher === Matchers.Exact) {
         if (sub.tag === tag) {
-          console.log("equals matched event");
           subscribers.push(sub);
         }
       } else if (sub.matcher === Matchers.StartsWith) {
         if (tag.startsWith(sub.tag)) {
-          console.log("startswith matched event");
           subscribers.push(sub);
         }
       } else if (sub.matcher === Matchers.Regex) {
@@ -162,8 +160,6 @@ export class EventsClient extends SaltClient {
         matcher: subscriber.matcher,
         handler: async (event: any) => {
           // event has been found, trigger function
-          console.debug("got matching event");
-
           this.unsubscribe(id);
           resolve(event);
         },
