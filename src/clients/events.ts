@@ -55,12 +55,19 @@ export class EventsClient extends SaltClient {
 
     this.source.onopen = () => {
       // TODO: Something else??
-      console.debug("connected to salt event bus");
+      this.config.logger?.debug("connected to salt event bus");
     };
 
-    this.source.onerror = (err: any) => {
+    this.source.onerror = async (err: any) => {
       // TODO: Reconnect logic?
-      console.error(err);
+      this.config.logger?.error(err);
+
+      // re-connect if authorized denied
+      if (err && err.status === 401) {
+        this.config?.logger.info("force refreshing token");
+        await this.refreshToken(true);
+        await this.start();
+      }
     };
 
     this.source.onmessage = (message: any) => {
@@ -118,7 +125,7 @@ export class EventsClient extends SaltClient {
   public subscribe(subscriber: ISubscriber): number {
     this.id += 1;
 
-    console.debug(`subscribing to ${subscriber.tag}`);
+    this.config.logger?.debug(`subscribing to ${subscriber.tag}`);
     this.subscribers[this.id] = {
       tag: subscriber.tag,
       handler: subscriber.handler,
@@ -140,7 +147,7 @@ export class EventsClient extends SaltClient {
    * @param id - The id of the handler subscription as returned from subscribe
    */
   public unsubscribe(id: number) {
-    console.debug(`removing sub for ${id}`);
+    this.config.logger?.debug(`removing sub for ${id}`);
     delete this.subscribers[id];
   }
 

@@ -1,12 +1,12 @@
 import axios, { AxiosInstance } from "axios";
 import * as salt from "./index";
-import EventSource from 'eventsource';
 
 export interface ISaltConfigOptions {
   endpoint: string;
   username: string;
   password: string;
   eauth: string;
+  logger?: any;
 }
 
 export abstract class SaltClient {
@@ -43,9 +43,9 @@ export abstract class SaltClient {
     return result.data;
   }
 
-  protected async refreshToken() {
-    if (!this.expires || this.expires <= new Date().getTime() / 1000) {
-      console.log("refreshing token");
+  protected async refreshToken(force?: boolean) {
+    if (!this.expires || this.expires <= new Date().getTime() / 1000 || force) {
+      this.config.logger?.debug("refreshing token");
 
       const results = await this.client.post("/login", {
         username: this.config.username,
@@ -54,7 +54,7 @@ export abstract class SaltClient {
       });
 
       if (results.status == 200) {
-        console.log("login success");
+        this.config.logger?.debug("login success");
 
         this.token = results.data.return[0].token;
         this.expires = results.data.return[0].expire;
