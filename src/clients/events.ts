@@ -168,7 +168,7 @@ export class EventsClient extends SaltClient {
         handler: async (event: any) => {
           // event has been found, trigger function
           this.unsubscribe(id);
-          resolve(event);
+          resolve(subscriber.handler(event));
         },
       });
     });
