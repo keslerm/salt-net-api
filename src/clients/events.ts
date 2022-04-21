@@ -1,5 +1,6 @@
 import { SaltClient } from "../client";
 import EventSource from "eventsource";
+import { randomUUID } from 'crypto';
 
 export interface ISaltEvent {
   tag: string;
@@ -21,12 +22,17 @@ export interface ISubscriber {
   /**
    * The type of matcher to compare the tag to
    */
-  matcher?: Matchers;
+  matcher: Matchers;
 
   /**
    * Handler to execute when matching on a tag
    */
   handler: Function;
+  
+  /**
+   * Specify a custom ID for this subscription, if none specified a random one is generated
+   */
+  id?: string;
 }
 
 interface Subscribers {
@@ -36,7 +42,6 @@ interface Subscribers {
 export class EventsClient extends SaltClient {
   private subscribers: Subscribers = {};
   private source: EventSource;
-  private id: number = 0;
 
   /**
    * Starts the event stream
@@ -76,7 +81,7 @@ export class EventsClient extends SaltClient {
     };
   }
 
-  private async publish(event: ISaltEvent) {
+  public async publish(event: ISaltEvent) {
     const subscribers = this.findSubscribers(event.tag);
 
     for (const subscriber of subscribers) {
@@ -122,17 +127,15 @@ export class EventsClient extends SaltClient {
    * @param subscriber - The subscriber and handler for the event stream
    * @returns The internal id of the subscriber to use to unsubscribe.
    */
-  public subscribe(subscriber: ISubscriber): number {
-    this.id += 1;
+  public subscribe(subscriber: ISubscriber): string {
+    if (!subscriber.id) {
+      subscriber.id = randomUUID();
+    }
 
-    this.config.logger?.debug(`subscribing to ${subscriber.tag}`);
-    this.subscribers[this.id] = {
-      tag: subscriber.tag,
-      handler: subscriber.handler,
-      matcher: subscriber.matcher || Matchers.Exact,
-    };
+    this.config.logger?.debug(`creating subscription ${subscriber.id} for ${subscriber.tag}`);
+    this.subscribers[subscriber.id] = subscriber;
 
-    return this.id;
+    return subscriber.id;
   }
 
   /**
@@ -146,7 +149,7 @@ export class EventsClient extends SaltClient {
    * Unsubscribes a handler from the event stream
    * @param id - The id of the handler subscription as returned from subscribe
    */
-  public unsubscribe(id: number) {
+  public unsubscribe(id: string) {
     this.config.logger?.debug(`removing sub for ${id}`);
     delete this.subscribers[id];
   }
