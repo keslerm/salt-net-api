@@ -27,7 +27,7 @@ export interface ISubscriber {
   /**
    * Handler to execute when matching on a tag
    */
-  handler: Function;
+  handler: (tag: string, data: unknown) => Promise<void>;
   
   /**
    * Specify a custom ID for this subscription, if none specified a random one is generated
@@ -85,7 +85,7 @@ export class EventsClient extends SaltClient {
     const subscribers = this.findSubscribers(event.tag);
 
     for (const subscriber of subscribers) {
-      subscriber.handler(event);
+      subscriber.handler(event.tag, event.data);
     }
   }
 
@@ -152,28 +152,5 @@ export class EventsClient extends SaltClient {
   public unsubscribe(id: string) {
     this.config.logger?.debug(`removing sub for ${id}`);
     delete this.subscribers[id];
-  }
-
-  /**
-   * Helper function subscribe and execute a handler on the first message match and return the results
-   * @param subscriber - The subscriber to use
-   * @typeParam T - The return type of the handler
-   * @returns The return value of the handler
-   */
-  public async fireOnce<T>(subscriber: ISubscriber): Promise<T> {
-    return new Promise((resolve, reject) => {
-      // TODO error handling
-
-      // Wrap the handler with our own handler to control the flow logic
-      const id = this.subscribe({
-        tag: subscriber.tag,
-        matcher: subscriber.matcher,
-        handler: async (event: any) => {
-          // event has been found, trigger function
-          this.unsubscribe(id);
-          resolve(subscriber.handler(event));
-        },
-      });
-    });
   }
 }
