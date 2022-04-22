@@ -67,6 +67,76 @@ describe("test findSubscribers", () => {
     expect(subscribers[0]).toEqual(sub);
   });
 
+  it("should return when a mqtt with # match is found", () => {
+    const sub: ISubscriber = {
+      matcher: Matchers.MQTT,
+      tag: "test/#",
+      handler: (event: any) => {},
+    };
+
+    const client = new EventsClient({
+      eauth: "pam",
+      endpoint: "http://localhost",
+      username: "test",
+      password: "test",
+    });
+
+    client.subscribe(sub);
+
+    const subscribers: ISubscriber[] =
+      client.findSubscribers("test/tag/matcher");
+
+    expect(subscribers.length).toBe(1);
+    expect(subscribers[0]).toEqual(sub);
+  });
+
+  it("should return when a mqtt with + match is found", () => {
+    const sub: ISubscriber = {
+      matcher: Matchers.MQTT,
+      tag: "test/+/matcher",
+      handler: (event: any) => {},
+    };
+
+    const client = new EventsClient({
+      eauth: "pam",
+      endpoint: "http://localhost",
+      username: "test",
+      password: "test",
+    });
+
+    client.subscribe(sub);
+
+    const subscribers: ISubscriber[] =
+      client.findSubscribers("test/tag/matcher");
+
+    expect(subscribers.length).toBe(1);
+    expect(subscribers[0]).toEqual(sub);
+  });
+
+  it("should return when a mqtt with multple + match is found", () => {
+    const sub: ISubscriber = {
+      matcher: Matchers.MQTT,
+      tag: "+/+/matcher",
+      handler: (event: any) => {},
+    };
+
+    const client = new EventsClient({
+      eauth: "pam",
+      endpoint: "http://localhost",
+      username: "test",
+      password: "test",
+    });
+
+    client.subscribe(sub);
+
+    const subscribers: ISubscriber[] =
+      client.findSubscribers("test/tag/matcher");
+
+    expect(subscribers.length).toBe(1);
+    expect(subscribers[0]).toEqual(sub);
+  });
+
+
   it("should return when a regex match is found", () => {
     const sub: ISubscriber = {
       matcher: Matchers.Regex,

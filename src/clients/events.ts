@@ -1,6 +1,6 @@
 import { SaltClient } from "../client";
 import EventSource from "eventsource";
-import { randomUUID } from 'crypto';
+import { randomUUID } from "crypto";
 
 export interface ISaltEvent {
   tag: string;
@@ -11,6 +11,7 @@ export enum Matchers {
   Exact,
   StartsWith,
   Regex,
+  MQTT,
 }
 
 export interface ISubscriber {
@@ -27,8 +28,8 @@ export interface ISubscriber {
   /**
    * Handler to execute when matching on a tag
    */
-  handler: (tag: string, data: unknown) => Promise<void>;
-  
+  handler: (event: { tag: string; data: unknown }) => void;
+
   /**
    * Specify a custom ID for this subscription, if none specified a random one is generated
    */
@@ -85,7 +86,7 @@ export class EventsClient extends SaltClient {
     const subscribers = this.findSubscribers(event.tag);
 
     for (const subscriber of subscribers) {
-      subscriber.handler(event.tag, event.data);
+      subscriber.handler(event);
     }
   }
 
@@ -113,6 +114,10 @@ export class EventsClient extends SaltClient {
         if (r.test(tag)) {
           subscribers.push(sub);
         }
+      } else if (sub.matcher === Matchers.MQTT) {
+        if (this.mqttMatcher(sub.tag, tag)) {
+          subscribers.push(sub);
+        }
       } else {
         // Just in case
         throw new Error("Invalid tag match type");
@@ -132,7 +137,9 @@ export class EventsClient extends SaltClient {
       subscriber.id = randomUUID();
     }
 
-    this.config.logger?.debug(`creating subscription ${subscriber.id} for ${subscriber.tag}`);
+    this.config.logger?.debug(
+      `creating subscription ${subscriber.id} for ${subscriber.tag}`
+    );
     this.subscribers[subscriber.id] = subscriber;
 
     return subscriber.id;
@@ -152,5 +159,34 @@ export class EventsClient extends SaltClient {
   public unsubscribe(id: string) {
     this.config.logger?.debug(`removing sub for ${id}`);
     delete this.subscribers[id];
+  }
+
+  private mqttMatcher(
+    filter: string,
+    topic: string,
+    handleSharedSubscription = false
+  ) {
+    const filterArray = filter.split("/");
+
+    // handle shared subscrition
+    if (
+      handleSharedSubscription &&
+      filterArray.length > 2 &&
+      filter.startsWith("$share/")
+    ) {
+      filterArray.splice(0, 2);
+    }
+
+    const length = filterArray.length;
+    const topicArray = topic.split("/");
+
+    for (let i = 0; i < length; ++i) {
+      const left = filterArray[i];
+      const right = topicArray[i];
+      if (left === "#") return topicArray.length >= length - 1;
+      if (left !== "+" && left !== right) return false;
+    }
+
+    return length === topicArray.length;
   }
 }
