@@ -23,6 +23,7 @@ export interface ISlsRequest extends Core.ILocalRequest {
     mods: string;
     test?: boolean;
     exclude?: string;
+    pillar?: any;
   }
 }
 export interface ISlsResponse extends IHighStateResponse {}
